@@ -1,72 +1,74 @@
-#**CONTEXTO**
+## Análise de Dados e Criação de um Modelo de Machine Learning para Previsão de Depressão com Base no Estudo sobre Hábitos Saudáveis
 
-#**DEPRESSÃO E HÁBITOS SAUDÁVEIS**
+## Introdução
 
-O transtorno depressivo representa um grande problema de saúde pública e é apontado como uma das principais causas de doenças e debilitações segundo a Organização Mundial da Saúde (OMS). A depressão resulta de uma interação complexa de fatores sociais, psicológicos e biológicos e, embora o acesso a diagnósticos e tratamentos esteja aumentando, muitos ainda não possuem acesso ao controle adequado dos sintomas depressivos.
+A depressão é um transtorno que representa um sério problema de saúde pública, sendo uma das principais causas de doenças e debilitações, de acordo com a Organização Mundial da Saúde (OMS). Embora o acesso a diagnósticos e tratamentos esteja aumentando, muitas pessoas ainda não possuem controle adequado dos sintomas depressivos. Para promover um estilo de vida saudável, a OMS recomenda a prática regular de exercícios físicos e a adoção de uma dieta saudável.
 
-Para garantir um estilo de vida saudável, a OMS recomenda a prática regular de exercícios, bem como a adoção de uma dieta saudável rica em alimentos in natura e com reduzido teor de gordura saturada, sal e açúcares refinados.
+Neste artigo, utilizaremos dados de uma pesquisa realizada nos Estados Unidos para analisar o perfil de indivíduos com sintomas depressivos e investigar a associação entre hábitos saudáveis de alimentação, atividade física e a ocorrência de depressão nessa população.
 
-Nesta trabalho utilizei dados de uma pesquisa realizada anualmente nos Estados Unidos para avaliar (1) qual o perfil de indivíduos (adultos maiores de 18 anos) com sintomas depressivos nos EUA no período de 2005-2006, e (2) se hábitos saudáveis de alimentação e atividade física estão associados a menores índices de depressão nesta população. 
+O Estudo Nacional de Exame de Saúde e Nutrição (NHANES)
 
+O NHANES é uma pesquisa conduzida anualmente pelo Centro Nacional de Estatísticas de Saúde (NCHS) dos Centros de Controle e Prevenção de Doenças (CDC) dos Estados Unidos. Essa pesquisa tem como objetivo avaliar a saúde e a nutrição de adultos e crianças no país. Os dados coletados incluem informações demográficas, socioeconômicas, dietéticas, de saúde e também realizam exames médicos, odontológicos, fisiológicos e laboratoriais.
 
-#**NATIONAL HEALTH AND NUTRITION EXAMINATION SURVEY (NHANES)**
+O estudo utiliza uma amostra de aproximadamente 5.000 pessoas a cada ano, selecionadas de forma a representar a população civil não institucionalizada dos EUA. Devido à complexidade da amostragem, é necessário utilizar técnicas e ferramentas adequadas para análise.
 
-O National Health and Nutrition Examination Survey (NHANES) é uma pesquisa anual conduzida pelo National Center for Health Statistics (NCHS) do Centro de Controle e Prevenção de Doenças (Centers for Disease Control - CDC) para avaliar a saúde e nutrição de adultos e crianças dos Estados Unidos. Dados coletados incluem questões demográficas, socioeconômicas, dietéticas e relacionadas à saúde, com o componente de exame contendo medidas médicas, odontológicas, fisiológicas e exames laboratoriais.
+## Análise Preliminar de Dados
 
-A pesquisa examina uma amostra de cerca de 5.000 pessoas a cada ano, selecionada a partir de amostragem complexa a fim de selecionar uma amostra representativa da população civil não institucionalizada dos EUA. Sendo assim, as análises utilizando este estudo devem ser realizadas utilizando técnicas e ferramentas que levem em conta a amostragem complexa.
+Inicialmente, foi realizada a junção de dois data frames, denominados df_demo e df_pag, com base na coluna 'SEQN'. O novo data frame resultante, denominado df_full, possui 31 colunas e 5.334 entradas. Em seguida, foi verificado o percentual de valores ausentes em cada coluna, observando-se que a maioria das colunas apresentava cerca de 5,14% de valores nulos. As exceções foram as colunas DPQ010 a DPQ090, com 9,34% de valores ausentes, e a coluna INDFMINC, com 0,88% de valores nulos.
 
-Neste trabalho, no entanto, irei assumir que os dados foram obtidos usando uma amostra aleatória da população de interesse e utilizarei técnicas e ferramentas de análise usuais para amostras aleatórias.
+Foram apresentadas medidas resumo das variáveis quantitativas do df_full, excluindo a coluna 'SEQN'. Os valores apresentados incluíam contagem, média, desvio padrão, mínimo, quartis, máximo e percentis (95% e 99%). As variáveis DPQ010 a DPQ090 representam os resultados de um questionário com valores de 0 a 9, em que valores mais altos indicam maior frequência de sintomas depressivos. Já as variáveis HEI2015C1_TOTALVEG a HEI2015_TOTAL_SCORE refletem diferentes aspectos da alimentação saudável, com pontuações variando de 0 a 10.
 
-#**PATIENT HEALTH QUESTIONNAIRE-9 (PHQ-9)**
+## Análise de Dados
 
-O Patient Health Questionnaire-9 (PHQ-9) é um instrumento utilizado para avaliar o grau de depressão em pacientes. O questionário consiste de 9 itens em que os respondentes indicam a frequência (0 = “nenhuma vez”, 1 = “menos de uma semana”, 2 = “uma semana ou mais” e 3 = “quase todos os dias”) de sintomas de depressão nas duas últimas semanas.
+A análise de dados foi realizada em várias etapas:
 
-O PHQ-9 inclui os seguintes itens para a pergunta “Nas últimas 2 semanas, com que frequência você ficou incomodado por algum dos problemas a seguir?” (0 = “nenhuma vez”, 1 = “menos de uma semana”, 2 = “uma semana ou mais” e 3 = “quase todos os dias”):
+Preparação dos dados: Os dados foram preparados por meio de tratamento de variáveis e renomeação de colunas e categorias para melhor compreensão.
 
-1 - Pouco interesse ou pouco prazer em fazer as coisas
+Avaliação da frequência das variáveis qualitativas: As frequências das respostas das variáveis qualitativas foram avaliadas por meio da contagem dos valores.
 
-2 - Se sentiu para baixo, deprimido(a) ou sem perspectiva
+Limpeza e transformações: Foram realizadas transformações nos dados, como substituição de valores ausentes, agrupamento de categorias e substituição de valores categóricos por legendas mais descritivas.
 
-3 - Dificuldade para pegar no sono ou permanecer dormindo ou dormiu mais do que o costume
+Construção de variáveis: Foram criadas novas variáveis com base nas existentes, como o cálculo do escore PHQ-9 a partir das respostas do questionário, agrupamento das respostas em categorias mais simples e criação de variáveis para identificar a presença de sintomas de depressão.
 
-4 - Se sentiu cansado(a) ou com pouca energia
+Análise univariada: Foi realizada uma análise descritiva das variáveis quantitativas e uma análise de frequência das variáveis qualitativas. Também foram criados gráficos para visualizar a distribuição dos dados.
 
-5 - Falta de apetite ou comeu demais
+Análise bivariada: Foi realizada uma análise de associação entre a variável de depressão e outras variáveis quantitativas, utilizando gráficos de boxplot. Também foram comparadas as distribuições das variáveis entre os casos positivos de depressão e todos os casos.
 
-6 - Se sentiu mal consigo mesmo(a) ou achou que é um fracasso ou que decepcionou sua família ou a você mesmo(a)
+## Teste de Hipóteses
 
-7 - Dificuldade para se concentrar nas coisas (como ler o jornal ou ver televisão)
+Realizamos testes de hipóteses para investigar possíveis diferenças entre grupos de sintomas de depressão em relação a variáveis como idade, renda anual familiar, média de exercícios semanais e escore de saúde. Os resultados revelaram diferenças estatisticamente significativas na renda anual familiar, média de exercícios semanais e escore de saúde entre os grupos de sintomas de depressão.
 
-8 - Teve lentidão para se movimentar ou falar (a ponto de outras pessoas perceberem), ou ao contrário, esteve tão agitado(a) que você ficava andando de um lado para o outro mais do que costume
+No caso da idade, não foram encontradas diferenças estatisticamente significativas na média entre os grupos de sintomas de depressão. Esses resultados sugerem que a idade não é um fator determinante para a presença de sintomas depressivos nessa população.
 
-9 - Pensou em se ferir de alguma maneira ou que seria melhor estar morto(a)
+No entanto, observamos diferenças estatisticamente significativas na renda anual familiar entre os grupos de sintomas de depressão. Essa descoberta indica que a renda pode desempenhar um papel importante na predisposição aos sintomas depressivos. É importante considerar que a renda pode afetar fatores como acesso a cuidados de saúde, qualidade de vida e estresse financeiro, que estão relacionados à saúde mental.
 
-O escore total é calculado a partir da soma dos itens 1-9 e varia de 0 a 27, em que maiores valores do escore indicam maiores frequências de sintomas de depressão. Aqueles com pontuação maior ou igual a 5 para o escore total de PHQ-9 são considerados como tendo sintomas leves (5-9), moderados (10-14), moderadamente severos (15-19) e severos de depressão (>= 20).
+Também encontramos diferenças estatisticamente significativas na média de exercícios semanais entre os grupos de sintomas de depressão. Esses resultados sugerem que a prática regular de atividade física pode estar associada a menores índices de depressão. A atividade física tem sido reconhecida como um importante componente na promoção da saúde mental e no alívio dos sintomas depressivos.
 
-#**Healthy Eating Index - (HEI)**
+Além disso, identificamos diferenças estatisticamente significativas nos escores de saúde entre os grupos de sintomas de depressão. Isso indica que a percepção subjetiva da saúde está relacionada à presença de sintomas depressivos. Essa descoberta destaca a importância de abordar a saúde de forma holística, considerando não apenas aspectos físicos, mas também aspectos emocionais e mentais.
 
-O Healthy Eating Index (HEI) é uma medida de qualidade da dieta baseada nas orientações dietéticas do governo federal americano (Dietary Guidelines for Americans). O HEI utiliza diferentes grupos alimentares para o cálculo do escore, variando de 0 a 100, em que maiores valores do escore refletem dietas mais próximas das orientações alimentares em vigor.
+## Análise de Interações entre as Variáveis
 
-O índice é composto por 13 componentes baseados nos grupos alimentares descritos nas recomendações dietéticas. Detalhes dos valores máximos e interpretações estão descritos no quadro abaixo:
+Realizamos análises de correlação de ponto bisserial para avaliar as associações entre as variáveis contínuas e a variável alvo "Depressão". Identificamos as variáveis que apresentaram maior associação com a depressão em um contexto de variável alvo binária.
 
-<img src="https://i.imgur.com/rFhgCMp.png"></img>
+Os resultados revelaram que a renda anual familiar, a escolaridade (especificamente o nível de educação superior completo ou maior), o gênero, a média de atividades físicas semanais e o escore de saúde apresentaram associação significativa com a depressão. Valores negativos indicaram uma associação negativa, enquanto valores positivos indicaram uma associação positiva. Essas variáveis podem ser consideradas relevantes para a previsão da depressão.
 
+Essas análises de interações entre as variáveis forneceram insights importantes sobre os fatores que estão associados à depressão. A renda, a educação, o gênero, a atividade física e a percepção da saúde são aspectos multifacetados que podem influenciar a manifestação e o desenvolvimento da depressão. Compreender essas interações é fundamental para uma abordagem mais abrangente e eficaz no tratamento e prevenção da depressão.
 
-#**Physical Activity Guidelines for Americans (PAGA)**
+## Modelagem
 
-O Physical Activity Guidelines for Americans (PAG) é emitido pelo Departamento de Saúde e Serviços Humanos (U.S. Department of Health and Human Services (HHS)) e possui recomendações de atividades físicas. Este documento é utilizado em conjunto com as orientações dietéticas para americanos (Dietary Guidelines for Americans) para promover a importância de ser fisicamente ativo e seguir uma dieta saudável.
+Com base nos resultados obtidos, desenvolvemos um modelo de Machine Learning utilizando o algoritmo Extra Trees Classifier para prever a depressão. O desempenho do modelo foi avaliado por meio de diversas métricas.
 
-O PAGA recomenda que adultos se engajem em pelo menos 150 minutos de atividades aeróbicas de intensidade moderada ou 75 minutos de atividades aeróbicas de intensidade vigorosa semanalmente. A partir dos dados coletados do NHANES, é possível calcular o número de minutos de atividades físicas, definido como a total minutos semanais de atividades físicas moderadas + 2*(total minutos de atividades aeróbicas vigorosas).
+O modelo apresentou uma alta acurácia de 94,98%, o que indica que o modelo está acertando aproximadamente 94,98% das previsões. Além disso, o AUC (Area Under the Curve) de 0,9571 sugere que o modelo possui uma boa capacidade de distinguir entre as classes positiva e negativa.
 
-Abaixo estão os bancos de dados utilizados:
+As métricas de recall, precisão e F1-score revelaram que o modelo é capaz de identificar corretamente cerca de 71,76% dos casos de depressão, enquanto a taxa de casos identificados corretamente como positivos é de aproximadamente 92,46%. O F1-score de 0,8080 indica um bom equilíbrio entre precisão e recall.
 
-**DEMO_PHQ.csv**: banco de dados contendo 5334 observações de adultos pesquisados no NHANES 2005-2006.
+O coeficiente Kappa de 0,7796 indica uma concordância considerável além da concordância esperada ao acaso, enquanto o coeficiente MCC (Matthews Correlation Coefficient) de 0,7879 revela um bom desempenho geral do modelo.
 
-**PAG_HEI.csv**: banco de dados contendo 9424 observações de crianças e adultos pesquisados no NHANES 2005-2006.
+## Conclusão
 
-Disponíveis em: https://github.com/emmanuelvrm/portifolio/tree/main/Inferencia_Depressao_e_Habitos_Saudaveis/docs
+Com base nos resultados e nas saídas dos testes, concluímos que o modelo Extra Trees Classifier apresentou um desempenho promissor na detecção de depressão. Suas métricas de desempenho, como alta acurácia, capacidade de distinguir entre as classes positiva e negativa e equilíbrio entre precisão e recall, indicam seu potencial como uma ferramenta útil para auxiliar na identificação de indivíduos com sintomas depressivos.
 
+No entanto, é importante ressaltar que este modelo foi desenvolvido com base nos dados específicos do estudo e requer validação adicional em outras populações e contextos clínicos. Além disso, é necessário considerar outras variáveis e fatores relevantes para uma compreensão mais abrangente da depressão e sua prevenção.
 
-
-
+Em suma, este estudo demonstrou a importância de análises de dados e modelos de Machine Learning na investigação dos fatores associados à depressão e na criação de ferramentas preditivas. Essas abordagens podem fornecer insights valiosos para profissionais de saúde e pesquisadores, contribuindo para a identificação precoce, tratamento adequado e prevenção da depressão, visando promover uma melhor qualidade de vida e bem-estar mental para indivíduos afetados por essa condição.
 
