@@ -1,3 +1,70 @@
+# Depressão e Hábitos Saudáveis
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/emmanuelvrm/inferencia-depressao-habitos-saudaveis/blob/main/notebooks/Inferencia_Depressao_e_Habitos_Saudaveis.ipynb)
+![Python](https://img.shields.io/badge/Python-3.10-blue) ![PyCaret](https://img.shields.io/badge/PyCaret-3.x-orange) ![License](https://img.shields.io/badge/license-MIT-green)
+
+Análise de dados e modelo de *Machine Learning* para **inferir sintomas depressivos** a partir de hábitos saudáveis (alimentação e atividade física), usando dados do **NHANES** (CDC/NCHS, EUA): questionário PHQ-9 e índice de alimentação saudável HEI-2015.
+
+> **Aviso:** este projeto tem fins educacionais e de portfólio. O modelo **não é uma ferramenta de diagnóstico** e não substitui avaliação de um profissional de saúde.
+
+## Resumo dos resultados
+
+Modelo final: **Extra Trees Classifier** (PyCaret), com as variáveis gênero, idade, renda anual familiar, escore de saúde (HEI) e média semanal de atividade física.
+
+| Métrica | Valor |
+| ------- | ----- |
+| Acurácia | 94,98% |
+| AUC | 0,9571 |
+| Recall | 71,76% |
+| Precisão | 92,46% |
+| F1-score | 0,8080 |
+| Kappa | 0,7796 |
+| MCC | 0,7879 |
+
+Como os casos positivos são minoria, a **acurácia sozinha engana**: o recall (~72%) mostra que cerca de 28% dos casos de depressão não foram identificados. Os testes de hipóteses indicaram diferenças significativas de renda, atividade física e escore de saúde entre os grupos; a idade não mostrou diferença significativa.
+
+## Estrutura do repositório
+
+```
+inferencia-depressao-habitos-saudaveis/
+├── data/
+│   ├── DEMO_PHQ.csv                # demografia + respostas PHQ-9
+│   └── PAG_HEI.csv                 # atividade física + HEI-2015
+├── docs/
+│   ├── Dicionario_PHQ.pdf
+│   └── Dicionario_HEI.pdf
+├── model/
+│   ├── previsao_depressao.pkl      # pipeline PyCaret salvo
+│   └── Modelo_Inferencia_Depressao.ipynb   # apenas teste do modelo
+├── notebooks/
+│   └── Inferencia_Depressao_e_Habitos_Saudaveis.ipynb
+├── requirements.txt
+└── README.md
+```
+
+## Como executar
+
+```bash
+git clone https://github.com/emmanuelvrm/inferencia-depressao-habitos-saudaveis.git
+cd inferencia-depressao-habitos-saudaveis
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+jupyter notebook notebooks/Inferencia_Depressao_e_Habitos_Saudaveis.ipynb
+```
+
+PyCaret 3.x exige **Python 3.9 a 3.11**. O notebook lê os CSVs direto deste repositório no GitHub, então também roda no Google Colab (botão no topo). Versão original no Colab: [link](https://colab.research.google.com/drive/1FPVrEQy9dMInSYPAoLhp29sQc9lWQsVN?usp=sharing).
+
+> O `.pkl` é um arquivo *pickle*: só carregue de fontes em que confia e use versões de PyCaret/scikit-learn compatíveis com a que o gerou.
+
+## Fonte dos dados
+
+[NHANES](https://www.cdc.gov/nchs/nhanes/) (National Health and Nutrition Examination Survey), CDC/NCHS. Dados públicos.
+
+## Relatório completo
+
+<details>
+<summary>Clique para expandir o relatório original</summary>
+
 ## Análise de Dados e Criação de um Modelo de Machine Learning para Previsão de Depressão com Base no Estudo sobre Hábitos Saudáveis
 
 ## Introdução
@@ -72,3 +139,8 @@ No entanto, é importante ressaltar que este modelo foi desenvolvido com base no
 
 Em suma, este estudo demonstrou a importância de análises de dados e modelos de Machine Learning na investigação dos fatores associados à depressão e na criação de ferramentas preditivas. Essas abordagens podem fornecer insights valiosos para profissionais de saúde e pesquisadores, contribuindo para a identificação precoce, tratamento adequado e prevenção da depressão, visando promover uma melhor qualidade de vida e bem-estar mental para indivíduos afetados por essa condição.
 
+</details>
+
+## Licença
+
+Código e notebooks sob licença MIT (veja `LICENSE`).
